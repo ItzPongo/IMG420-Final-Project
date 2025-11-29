@@ -1,3 +1,27 @@
-[gd_scene format=3 uid="uid://bqwyic7o1wngj"]
+[gd_scene load_steps=4 format=3 uid="uid://bqwyic7o1wngj"]
+
+[ext_resource type="Texture2D" uid="uid://bstoctoyrbwff" path="res://Assets/Light_cone_small.png" id="1_jjgbg"]
+[ext_resource type="Script" uid="uid://xt80cgp5ilr4" path="res://Scenes/Light.cs" id="2_bo1nx"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_7u77a"]
+blend_mode = 3
 
 [node name="Main" type="Node2D"]
+
+[node name="DynamicFog2D" type="DynamicFog2D" parent="."]
+FogOpacity = 0.5
+LightGroup = "light"
+
+[node name="Fog" type="Sprite2D" parent="DynamicFog2D"]
+material = SubResource("CanvasItemMaterial_7u77a")
+
+[node name="LightCone" type="Sprite2D" parent="." node_paths=PackedStringArray("Pivot") groups=["light"]]
+visible = false
+position = Vector2(576, 324)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("1_jjgbg")
+script = ExtResource("2_bo1nx")
+Pivot = NodePath("../Pivot")
+
+[node name="Pivot" type="Node2D" parent="."]
+position = Vector2(576, 324)
