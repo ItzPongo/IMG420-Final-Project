@@ -31,6 +31,7 @@ text = "100%"
 autostart = true
 
 [node name="BatteryTimer" type="Timer" parent="."]
+wait_time = 0.02
 autostart = true
 
 [connection signal="timeout" from="ScoreTimer" to="." method="OnScoreTimerTimeout"]

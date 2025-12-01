@@ -38,7 +38,7 @@ public partial class Light : Sprite2D
 	
 	private void OnHudBatteryUpdate(float batteryPercent)
 	{
-		batteryDecimal = batteryPercent / 100;
+		batteryDecimal = batteryPercent / 10000f;
 		Radius = baseRadius * batteryDecimal;
 		Scale = baseScale * batteryDecimal;
 	}

@@ -11,12 +11,16 @@ public partial class Hud : CanvasLayer
 	[Signal] public delegate void BatteryUpdateEventHandler();
 
 	private int elapsedSeconds = 0;
-	private float batteryPercent = 100f;
+	private float batteryPercent = 10000f;
+	private float batteryText = 0f;
 	private float batteryStep = 1f;
 	private float batteryMin = 0f;
+	private float batteryMax = 0f;
 
 	public override void _Ready()
 	{
+		batteryMax = batteryPercent;
+		
 		UpdateScoreLabel();
 		UpdateBattery();
 	}
@@ -48,8 +52,23 @@ public partial class Hud : CanvasLayer
 
 	private void UpdateBattery()
 	{
-		BatteryLabel.Text = $"{Mathf.RoundToInt(batteryPercent)}%";
+		batteryText = batteryPercent / 100f;
+		
+		BatteryLabel.Text = $"{Mathf.RoundToInt(batteryText)}%";
 		
 		EmitSignal(SignalName.BatteryUpdate, batteryPercent);
+	}
+	
+	private void OnBatteryPickup(float batteryValue)
+	{
+		float batteryIncrease = batteryPercent + batteryValue;
+		if (batteryIncrease > batteryMax)
+		{
+			batteryPercent = batteryMax;
+		}
+		else
+		{
+			batteryPercent += batteryValue;
+		}
 	}
 }

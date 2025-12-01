@@ -1,7 +1,7 @@
 #include "dynamic_fog_2d.h"
 
 void DynamicFog2D::_bind_methods() {
-    // Core fog update methods
+    // Fog update methods
     ClassDB::bind_method(D_METHOD("UpdateFog"), &DynamicFog2D::UpdateFog);
     ClassDB::bind_method(D_METHOD("GetRotatedLightImage", "light_sprite"), &DynamicFog2D::GetRotatedLightImage);
     ClassDB::bind_method(D_METHOD("RegenerateFog", "delta_time"), &DynamicFog2D::RegenerateFog);
@@ -17,7 +17,7 @@ void DynamicFog2D::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_light_group", "group_name"), &DynamicFog2D::set_light_group);
     ClassDB::bind_method(D_METHOD("get_light_group"), &DynamicFog2D::get_light_group);
 
-    // Register properties in the editor
+    // Register properties in inspector
     ADD_PROPERTY(PropertyInfo(Variant::INT, "display_width"), "set_display_width", "get_display_width");
     ADD_PROPERTY(PropertyInfo(Variant::INT, "display_height"), "set_display_height", "get_display_height");
     ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "FogRegenRate"), "set_fog_regen_rate", "get_fog_regen_rate");
@@ -27,7 +27,6 @@ void DynamicFog2D::_bind_methods() {
 // Constructor
 DynamicFog2D::DynamicFog2D() {}
 
-// Called when the node enters the scene tree
 void DynamicFog2D::_ready() {
     bool is_editor_mode = Engine::get_singleton()->is_editor_hint();
 
@@ -35,7 +34,7 @@ void DynamicFog2D::_ready() {
     fog_sprite = Object::cast_to<Sprite2D>(get_node_or_null("Fog"));
     if (!fog_sprite) {
         print_line("[DynamicFog2D] Error: No child Sprite2D named 'Fog' found.");
-        print_line("Please add a Sprite2D node named 'Fog' as a child.");
+        print_line("Please add a Sprite2D node named 'Fog' as a child, and make sure its CanvasItemMaterial Blend Mode is set to Multiply.");
         set_process(false);
         return;
     }
@@ -52,7 +51,7 @@ void DynamicFog2D::_ready() {
     fog_image_width = fog_image_width > 0 ? fog_image_width : 1;
     fog_image_height = fog_image_height > 0 ? fog_image_height : 1;
 
-    // Create the fog image and fill with full black (opaque)
+    // Create the fog image and fill with black pixels
     fog_image.instantiate();
     fog_image = fog_image->create_empty(fog_image_width, fog_image_height, false, Image::FORMAT_RGBA8);
     fog_image->fill(Color(0, 0, 0, 1));
