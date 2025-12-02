@@ -1,0 +1,113 @@
+[gd_scene load_steps=23 format=3 uid="uid://b8jwc3m6aq53q"]
+
+[ext_resource type="Script" uid="uid://bee4u06rti2cs" path="res://Scripts/Enemy.cs" id="1_hghv2"]
+[ext_resource type="Texture2D" uid="uid://ctwjohtcc0mmy" path="res://Assets/Sprites/enemywalk_0.png" id="2_auwsv"]
+[ext_resource type="Texture2D" uid="uid://c5js3414j7yty" path="res://Assets/Sprites/enemywalk_1.png" id="3_8uf12"]
+[ext_resource type="Texture2D" uid="uid://5bl0gjrg0evf" path="res://Assets/Sprites/enemywalk_2.png" id="4_po0sg"]
+[ext_resource type="Texture2D" uid="uid://dv226w6c0ryn7" path="res://Assets/Sprites/enemywalk_3.png" id="5_haro7"]
+[ext_resource type="Texture2D" uid="uid://c8tqc6s4e5fv" path="res://Assets/Sprites/enemywalk_4.png" id="6_56vhr"]
+[ext_resource type="Texture2D" uid="uid://c6tvj8u7ad3ld" path="res://Assets/Sprites/enemywalk_5.png" id="7_ta2yt"]
+[ext_resource type="Texture2D" uid="uid://ct8r44eyins8a" path="res://Assets/Sprites/enemywalk_6.png" id="8_m4x7e"]
+[ext_resource type="Script" uid="uid://bq2c3qf6yjv08" path="res://Scripts/BehaviorTree/Composites/BTSelector.cs" id="9_5xdhn"]
+[ext_resource type="Script" uid="uid://cnokvofy847lj" path="res://Scripts/BehaviorTree/Composites/BTSequence.cs" id="10_4jyny"]
+[ext_resource type="Script" uid="uid://guxwbl6pdy2y" path="res://Scripts/BehaviorTree/Conditions/BTIsBehindPlayer.cs" id="11_vh8xy"]
+[ext_resource type="Script" uid="uid://ccqib3ofibebc" path="res://Scripts/BehaviorTree/Conditions/BTIsInKillRange.cs" id="12_qjcj6"]
+[ext_resource type="Script" uid="uid://w63wbcuimmec" path="res://Scripts/BehaviorTree/Actions/BTKillPlayer.cs" id="13_4ycey"]
+[ext_resource type="Script" uid="uid://ba3lc7xd01c2i" path="res://Scripts/BehaviorTree/Conditions/BTIsInFlashlight.cs" id="14_8cim4"]
+[ext_resource type="Script" uid="uid://b2tphe4jlw77p" path="res://Scripts/BehaviorTree/Actions/BTStartEvading.cs" id="15_7x82w"]
+[ext_resource type="Script" uid="uid://bvqix0nuq5noi" path="res://Scripts/BehaviorTree/Conditions/BTIsEvadeTimerActive.cs" id="16_iatxd"]
+[ext_resource type="Script" uid="uid://b11shcqmn54x7" path="res://Scripts/BehaviorTree/Actions/BTEvade.cs" id="17_qqxsh"]
+[ext_resource type="Script" uid="uid://bkjrxoinru8o0" path="res://Scripts/BehaviorTree/Conditions/BTShouldEnrage.cs" id="18_0whn2"]
+[ext_resource type="Script" uid="uid://di4xm62n4g4w" path="res://Scripts/BehaviorTree/Actions/BTChaseEnraged.cs" id="19_bx1xr"]
+[ext_resource type="Script" uid="uid://eifp23kmtout" path="res://Scripts/BehaviorTree/Actions/BTSneak.cs" id="20_n85mp"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vt4ob"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_auwsv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_8uf12")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_po0sg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_haro7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_56vhr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_ta2yt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_m4x7e")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 6.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_auwsv"]
+radius = 16.0
+height = 60.0
+
+[node name="Enemy" type="CharacterBody2D"]
+script = ExtResource("1_hghv2")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_vt4ob")
+animation = &"walk"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_auwsv")
+
+[node name="StateLabel" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="BehaviorTree" type="Node" parent="."]
+script = ExtResource("9_5xdhn")
+
+[node name="AttackSequence" type="Node" parent="BehaviorTree"]
+script = ExtResource("10_4jyny")
+
+[node name="BTIsBehindPlayer" type="Node" parent="BehaviorTree/AttackSequence"]
+script = ExtResource("11_vh8xy")
+
+[node name="BTIsInKillRange" type="Node" parent="BehaviorTree/AttackSequence"]
+script = ExtResource("12_qjcj6")
+
+[node name="BTKillPlayer" type="Node" parent="BehaviorTree/AttackSequence"]
+script = ExtResource("13_4ycey")
+
+[node name="StartEvading" type="Node" parent="BehaviorTree"]
+script = ExtResource("10_4jyny")
+
+[node name="BTIsInFlashlight" type="Node" parent="BehaviorTree/StartEvading"]
+script = ExtResource("14_8cim4")
+
+[node name="BTStartEvading" type="Node" parent="BehaviorTree/StartEvading"]
+script = ExtResource("15_7x82w")
+
+[node name="ContinueEvading" type="Node" parent="BehaviorTree"]
+script = ExtResource("10_4jyny")
+
+[node name="BTIsEvadeTimerActive" type="Node" parent="BehaviorTree/ContinueEvading"]
+script = ExtResource("16_iatxd")
+
+[node name="BTEvade" type="Node" parent="BehaviorTree/ContinueEvading"]
+script = ExtResource("17_qqxsh")
+
+[node name="EnragedChase" type="Node" parent="BehaviorTree"]
+
+[node name="BTShouldEnrage" type="Node" parent="BehaviorTree/EnragedChase"]
+script = ExtResource("18_0whn2")
+
+[node name="BTChaseEnraged" type="Node" parent="BehaviorTree/EnragedChase"]
+script = ExtResource("19_bx1xr")
+
+[node name="BTSneak" type="Node" parent="BehaviorTree"]
+script = ExtResource("20_n85mp")
