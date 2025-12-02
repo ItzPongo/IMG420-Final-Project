@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=3 uid="uid://c1an8r6j7bf3w"]
+
+[ext_resource type="Texture2D" uid="uid://x5wf5rythy7x" path="res://sprites/Sprite-0001.png" id="1_0ps0c"]
+[ext_resource type="Script" uid="uid://ct85o787qvb2q" path="res://Scenes/Battery.cs" id="1_8fmpm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8fmpm"]
+atlas = ExtResource("1_0ps0c")
+region = Rect2(96, 64, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qise7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8fmpm")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_0ps0c"]
+radius = 11.045361
+
+[node name="Item" type="Area2D"]
+script = ExtResource("1_8fmpm")
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_qise7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_0ps0c")

@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdjfhjhw21wuq"]
+
+[ext_resource type="Texture2D" uid="uid://bstoctoyrbwff" path="res://Assets/Light_cone_small.png" id="1_jjgbg"]
+[ext_resource type="Script" uid="uid://xt80cgp5ilr4" path="res://Scripts/Light.cs" id="2_bo1nx"]
+
+[node name="Main" type="Node2D"]
+
+[node name="LightCone" type="Sprite2D" parent="." node_paths=PackedStringArray("Pivot") groups=["light"]]
+visible = false
+position = Vector2(94.5, -1)
+scale = Vector2(2.984375, 1.5)
+texture = ExtResource("1_jjgbg")
+script = ExtResource("2_bo1nx")
+Pivot = NodePath("../Pivot")
+
+[node name="Pivot" type="Node2D" parent="."]
+scale = Vector2(0.5, 0.5)

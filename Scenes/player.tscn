@@ -1,7 +1,62 @@
-[gd_scene format=3 uid="uid://dcaspd2sytk8e"]
+[gd_scene load_steps=11 format=3 uid="uid://dcaspd2sytk8e"]
 
-[node name="Player" type="CharacterBody2D"]
+[ext_resource type="Script" uid="uid://cgod76h1jhvw" path="res://Scenes/Player.cs" id="1_cvnsp"]
+[ext_resource type="Texture2D" uid="uid://x5wf5rythy7x" path="res://sprites/Sprite-0001.png" id="1_v0iea"]
+[ext_resource type="Script" uid="uid://c4q6kdk563u2g" path="res://Scenes/ItemSpawnArea.cs" id="3_6t5aa"]
+[ext_resource type="PackedScene" uid="uid://c1an8r6j7bf3w" path="res://Scenes/battery.tscn" id="4_vgqql"]
+[ext_resource type="Texture2D" uid="uid://bstoctoyrbwff" path="res://Assets/Light_cone_small.png" id="5_x3wgy"]
+[ext_resource type="Script" uid="uid://xt80cgp5ilr4" path="res://Scripts/Light.cs" id="6_3smsa"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cvnsp"]
+atlas = ExtResource("1_v0iea")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6t5aa"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cvnsp")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_v0iea"]
+radius = 7.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cvnsp"]
+radius = 362.0677
+
+[node name="player" type="CharacterBody2D"]
+floor_stop_on_slope = false
+floor_constant_speed = true
+floor_block_on_wall = false
+script = ExtResource("1_cvnsp")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_6t5aa")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_v0iea")
+
+[node name="ItemSpawnArea" type="Area2D" parent="."]
+script = ExtResource("3_6t5aa")
+ItemScene = ExtResource("4_vgqql")
+SpawnInterval = 5.0
+MaxItems = 15
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ItemSpawnArea"]
+shape = SubResource("CircleShape2D_cvnsp")
+
+[node name="Node2D" parent="." instance=ExtResource("4_vgqql")]
+
+[node name="LightCone" type="Sprite2D" parent="." node_paths=PackedStringArray("Pivot") groups=["light"]]
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_x3wgy")
+script = ExtResource("6_3smsa")
+Pivot = NodePath("../Pivot")
+
+[node name="Pivot" type="Node2D" parent="."]
