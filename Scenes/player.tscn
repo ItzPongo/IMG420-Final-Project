@@ -1,11 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://dcaspd2sytk8e"]
+[gd_scene load_steps=9 format=3 uid="uid://dcaspd2sytk8e"]
 
-[ext_resource type="Script" uid="uid://cgod76h1jhvw" path="res://Scenes/Player.cs" id="1_cvnsp"]
-[ext_resource type="Texture2D" uid="uid://x5wf5rythy7x" path="res://sprites/Sprite-0001.png" id="1_v0iea"]
-[ext_resource type="Script" uid="uid://c4q6kdk563u2g" path="res://Scenes/ItemSpawnArea.cs" id="3_6t5aa"]
+[ext_resource type="Script" uid="uid://cgod76h1jhvw" path="res://Scripts/Player.cs" id="1_cvnsp"]
+[ext_resource type="Texture2D" uid="uid://x5wf5rythy7x" path="res://Assets/Sprite-0001.png" id="1_v0iea"]
+[ext_resource type="Script" uid="uid://c4q6kdk563u2g" path="res://Scripts/ItemSpawnArea.cs" id="3_6t5aa"]
 [ext_resource type="PackedScene" uid="uid://c1an8r6j7bf3w" path="res://Scenes/battery.tscn" id="4_vgqql"]
-[ext_resource type="Texture2D" uid="uid://bstoctoyrbwff" path="res://Assets/Light_cone_small.png" id="5_x3wgy"]
-[ext_resource type="Script" uid="uid://xt80cgp5ilr4" path="res://Scripts/Light.cs" id="6_3smsa"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cvnsp"]
 atlas = ExtResource("1_v0iea")
@@ -52,11 +50,3 @@ MaxItems = 15
 shape = SubResource("CircleShape2D_cvnsp")
 
 [node name="Node2D" parent="." instance=ExtResource("4_vgqql")]
-
-[node name="LightCone" type="Sprite2D" parent="." node_paths=PackedStringArray("Pivot") groups=["light"]]
-scale = Vector2(1.5, 1.5)
-texture = ExtResource("5_x3wgy")
-script = ExtResource("6_3smsa")
-Pivot = NodePath("../Pivot")
-
-[node name="Pivot" type="Node2D" parent="."]

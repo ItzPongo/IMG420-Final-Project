@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://hlu3lmyfapj3"
-path="res://.godot/imported/HealthBarUnder.png-9ab0bad4a2116f9b0e6aec95d080e940.ctex"
+uid="uid://cyqs8akryruku"
+path="res://.godot/imported/flashlightProgress.png-40d42e273b7e59575a49f6c264c0f3c4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/HealthBarUnder.png"
-dest_files=["res://.godot/imported/HealthBarUnder.png-9ab0bad4a2116f9b0e6aec95d080e940.ctex"]
+source_file="res://Assets/flashlightProgress.png"
+dest_files=["res://.godot/imported/flashlightProgress.png-40d42e273b7e59575a49f6c264c0f3c4.ctex"]
 
 [params]
 

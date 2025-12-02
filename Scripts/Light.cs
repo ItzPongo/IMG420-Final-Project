@@ -3,6 +3,7 @@ using Godot;
 public partial class Light : Sprite2D
 {
 	[Export] public Node2D Pivot;
+	[Export] public CollisionPolygon2D LightHitbox;
 	[Export] public float Radius = 150f;
 	
 	private float batteryDecimal = 0f;
@@ -14,6 +15,8 @@ public partial class Light : Sprite2D
 	{
 		baseRadius = Radius;
 		baseScale = Scale;
+		Position = new Vector2(576, 324);
+		Pivot.Position = new Vector2(576, 324);
 	}
 
 	public override void _Process(double delta)
@@ -34,6 +37,10 @@ public partial class Light : Sprite2D
 		GlobalPosition = pivotPos + new Vector2(Radius, 0).Rotated(angle);
 
 		Rotation = angle;
+		
+		LightHitbox.Position = Position;
+		LightHitbox.Rotation = Rotation;
+		LightHitbox.Scale = Scale * 4.0f;
 	}
 	
 	private void OnHudBatteryUpdate(float batteryPercent)

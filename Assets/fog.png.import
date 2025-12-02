@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cyqs8akryruku"
-path="res://.godot/imported/flashlightProgress.png-047d54073a7615a3d446a251d6aacb4e.ctex"
+uid="uid://ctill18f8d76l"
+path="res://.godot/imported/fog.png-0298ca6fc9e4ad2d015b01628b131624.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/flashlightProgress.png"
-dest_files=["res://.godot/imported/flashlightProgress.png-047d54073a7615a3d446a251d6aacb4e.ctex"]
+source_file="res://Assets/fog.png"
+dest_files=["res://.godot/imported/fog.png-0298ca6fc9e4ad2d015b01628b131624.ctex"]
 
 [params]
 
