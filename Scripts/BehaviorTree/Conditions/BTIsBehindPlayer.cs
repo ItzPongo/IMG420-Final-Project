@@ -11,15 +11,9 @@ public partial class BTIsBehindPlayer : BTNode
 		if (player == null || !IsInstanceValid(player))
 			return BTState.Failure;
 		
-		// Calculate if bracken is behind player
+		// Calculate if enemy is behind player
 		Vector2 toEnemy = (agentNode.GlobalPosition - player.GlobalPosition).Normalized();
-		Vector2 playerFacing = Vector2.Right; // Default facing
-		
-		// Try to get player's facing direction if method exists
-		if (player.HasMethod("GetFacingDirection"))
-		{
-			playerFacing = (Vector2)player.Call("GetFacingDirection");
-		}
+		Vector2 playerFacing = Vector2.Right;
 		
 		// Dot product < 0 means behind
 		bool isBehind = toEnemy.Dot(playerFacing) < 0;

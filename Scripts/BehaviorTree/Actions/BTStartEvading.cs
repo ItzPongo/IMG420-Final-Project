@@ -12,17 +12,15 @@ public partial class BTStartEvading : BTNode
 		float evadeDuration;
 		if (timesSpotted % 3 == 0)
 		{
-			evadeDuration = blackboard.GetValue<float>("ShortEvadeDuration", 11.0f);
+			evadeDuration = blackboard.GetValue<float>("ShortEvadeDuration", 5.5f);
 		}
 		else
 		{
-			evadeDuration = blackboard.GetValue<float>("NormalEvadeDuration", 24.0f);
+			evadeDuration = blackboard.GetValue<float>("NormalEvadeDuration", 12.0f);
 		}
 		
 		blackboard.SetValue("EvadeTimer", evadeDuration);
 		
-		GD.Print($"Enemy spotted! Evading for {evadeDuration} seconds");
-		
-		return BTState.Success;
+		return BTState.Running;
 	}
 }

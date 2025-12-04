@@ -3,22 +3,23 @@ using Godot;
 public partial class Enemy : CharacterBody2D
 {
 	[ExportGroup("Stats")]
-	[Export] public float SneakSpeed = 30f;
+	[Export] public float SneakSpeed = 150f;
 	[Export] public float EvadeSpeed = 100f;
-	[Export] public float EnragedSpeed = 150f;
+	[Export] public float EnragedSpeed = 230f;
 	
 	[ExportGroup("Detection")]
 	[Export] public float KillRange = 30f;
 	[Export] public float SafeDistance = 200f;
 	
 	[ExportGroup("Anger System")]
-	[Export] public float AngerIncreaseRate = 2.0f;
+	[Export] public float AngerIncreaseRate = 8.0f;
 	[Export] public float AngerDecayRate = 0.5f;
 	[Export] public float MaxAnger = 11.0f;
+	[Export] public bool UseAcceleratingAnger = true;
 	
 	[ExportGroup("Evade Timing")]
-	[Export] public float NormalEvadeDuration = 24.0f;
-	[Export] public float ShortEvadeDuration = 11.0f;
+	[Export] public float NormalEvadeDuration = 12.0f;
+	[Export] public float ShortEvadeDuration = 5.5f;
 	
 	private Blackboard blackboard;
 	private BTNode behaviorTreeRoot;
@@ -46,26 +47,21 @@ public partial class Enemy : CharacterBody2D
 	
 	private void FindPlayer()
 	{
-		// Look for the Player CharacterBody2D node
 		var players = GetTree().GetNodesInGroup("player");
 		if (players.Count > 0)
 		{
 			player = players[0] as CharacterBody2D;
-			GD.Print($"Enemy: Found player via group: {player.Name}");
 		}
 		else
 		{
-			// Fallback: search by name
 			player = GetTree().Root.FindChild("Player", true, false) as CharacterBody2D;
 			if (player != null)
 			{
-				GD.Print($"Enemy: Found player via FindChild: {player.Name}");
 			}
 		}
 		
 		if (player == null)
 		{
-			GD.PrintErr("Enemy: Could not find Player node!");
 		}
 		blackboard.SetValue("Player", player);
 	}
@@ -87,13 +83,22 @@ public partial class Enemy : CharacterBody2D
 		blackboard.SetValue("SneakSpeed", SneakSpeed);
 		blackboard.SetValue("EvadeSpeed", EvadeSpeed);
 		blackboard.SetValue("EnragedSpeed", EnragedSpeed);
+		blackboard.SetValue("IsEnraged", false);
 	}
 	
 	public override void _PhysicsProcess(double delta)
 	{
 		blackboard.SetValue("Delta", (float)delta);
 		
-		UpdateAnger((float)delta);
+		// Stop ticking if player is dead
+		bool playerIsDead = blackboard.GetValue<bool>("PlayerIsDead", false);
+		if (playerIsDead)
+		{
+			Velocity = Vector2.Zero;
+			return;
+		}
+		
+		DecayAnger((float)delta);
 		
 		if (behaviorTreeRoot != null)
 		{
@@ -103,29 +108,24 @@ public partial class Enemy : CharacterBody2D
 		UpdateUI();
 		UpdateAnimation();
 	}
-	
-	private void UpdateAnger(float delta)
+
+	private void DecayAnger(float delta)
 	{
-		float angerLevel = blackboard.GetValue<float>("AngerLevel", 0.0f);
+		// Don't decay if enraged
+		bool isEnraged = blackboard.GetValue<bool>("IsEnraged", false);
+		if (isEnraged)
+			return;
+			
 		bool isInFlashlight = blackboard.GetValue<bool>("IsInFlashlight", false);
-		float timeInFlashlight = blackboard.GetValue<float>("TimeInFlashlight", 0.0f);
-		float increaseRate = blackboard.GetValue<float>("AngerIncreaseRate", 2.0f);
-		float decayRate = blackboard.GetValue<float>("AngerDecayRate", 0.5f);
-		float maxAnger = blackboard.GetValue<float>("MaxAnger", 11.0f);
-		
-		if (isInFlashlight)
+		if (!isInFlashlight)
 		{
-			timeInFlashlight += delta;
-			angerLevel = Mathf.Min(angerLevel + increaseRate * delta, maxAnger);
+			float angerLevel = blackboard.GetValue<float>("AngerLevel", 0.0f);
+			if (angerLevel > 0.0f)
+			{
+				angerLevel = Mathf.Max(angerLevel - 0.05f * delta, 0.0f);
+				blackboard.SetValue("AngerLevel", angerLevel);
+			}
 		}
-		else
-		{
-			timeInFlashlight = 0.0f;
-			angerLevel = Mathf.Max(angerLevel - decayRate * delta, 0.0f);
-		}
-		
-		blackboard.SetValue("AngerLevel", angerLevel);
-		blackboard.SetValue("TimeInFlashlight", timeInFlashlight);
 	}
 	
 	private void UpdateUI()
@@ -134,7 +134,9 @@ public partial class Enemy : CharacterBody2D
 		{
 			string state = blackboard.GetValue<string>("CurrentState", "Unknown");
 			float anger = blackboard.GetValue<float>("AngerLevel", 0.0f);
-			stateLabel.Text = $"{state}\nAnger: {anger:F1}/{MaxAnger:F1}";
+			bool isEnraged = blackboard.GetValue<bool>("IsEnraged", false);
+			string enragedText = isEnraged ? " [ENRAGED]" : "";
+			stateLabel.Text = $"{state}{enragedText}\nAnger: {anger:F1}/{MaxAnger:F1}";
 		}
 	}
 	
@@ -142,24 +144,20 @@ public partial class Enemy : CharacterBody2D
 	{
 		if (sprite == null || sprite.SpriteFrames == null) return;
 		
-		// Set animation speed
-		sprite.SpeedScale = 1.0f; // This will play at the FPS set in the SpriteFrames (5 FPS)
+		sprite.SpeedScale = 1.0f;
 		
 		if (Velocity.Length() > 0)
 		{
-			// Flip sprite based on horizontal movement
 			if (Velocity.X != 0)
 			{
 				sprite.FlipH = Velocity.X < 0;
 			}
 			
-			// Play walk animation
 			if (sprite.SpriteFrames.HasAnimation("walk"))
 				sprite.Play("walk");
 		}
 		else
 		{
-			// Stop on first frame when idle
 			if (sprite.SpriteFrames.HasAnimation("walk"))
 			{
 				sprite.Animation = "walk";
@@ -169,7 +167,6 @@ public partial class Enemy : CharacterBody2D
 		}
 	}
 	
-	// Called by flashlight detection system
 	public void EnterFlashlight()
 	{
 		blackboard.SetValue("IsInFlashlight", true);

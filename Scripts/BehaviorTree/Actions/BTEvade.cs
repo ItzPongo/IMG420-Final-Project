@@ -17,6 +17,15 @@ public partial class BTEvade : BTNode
 		
 		// Countdown evade timer
 		evadeTimer -= delta;
+		
+		// If timer hits 0, stop evading
+		if (evadeTimer <= 0.0f)
+		{
+			evadeTimer = 0.0f;
+			blackboard.SetValue("EvadeTimer", evadeTimer);
+			return BTState.Success;
+		}
+		
 		blackboard.SetValue("EvadeTimer", evadeTimer);
 		
 		// Move away from player

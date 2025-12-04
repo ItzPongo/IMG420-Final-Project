@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://b8jwc3m6aq53q"]
+[gd_scene load_steps=24 format=3 uid="uid://b8jwc3m6aq53q"]
 
 [ext_resource type="Script" uid="uid://bee4u06rti2cs" path="res://Scripts/Enemy.cs" id="1_hghv2"]
 [ext_resource type="Texture2D" uid="uid://ctwjohtcc0mmy" path="res://Assets/Sprites/enemywalk_0.png" id="2_auwsv"]
@@ -15,6 +15,7 @@
 [ext_resource type="Script" uid="uid://w63wbcuimmec" path="res://Scripts/BehaviorTree/Actions/BTKillPlayer.cs" id="13_4ycey"]
 [ext_resource type="Script" uid="uid://ba3lc7xd01c2i" path="res://Scripts/BehaviorTree/Conditions/BTIsInFlashlight.cs" id="14_8cim4"]
 [ext_resource type="Script" uid="uid://b2tphe4jlw77p" path="res://Scripts/BehaviorTree/Actions/BTStartEvading.cs" id="15_7x82w"]
+[ext_resource type="Script" uid="uid://dyqpouroo08cg" path="res://Scripts/BehaviorTree/Conditions/BTIsNotEnraged.cs" id="16_4jyny"]
 [ext_resource type="Script" uid="uid://bvqix0nuq5noi" path="res://Scripts/BehaviorTree/Conditions/BTIsEvadeTimerActive.cs" id="16_iatxd"]
 [ext_resource type="Script" uid="uid://b11shcqmn54x7" path="res://Scripts/BehaviorTree/Actions/BTEvade.cs" id="17_qqxsh"]
 [ext_resource type="Script" uid="uid://bkjrxoinru8o0" path="res://Scripts/BehaviorTree/Conditions/BTShouldEnrage.cs" id="18_0whn2"]
@@ -83,8 +84,20 @@ script = ExtResource("12_qjcj6")
 [node name="BTKillPlayer" type="Node" parent="BehaviorTree/AttackSequence"]
 script = ExtResource("13_4ycey")
 
+[node name="EnragedChase" type="Node" parent="BehaviorTree"]
+script = ExtResource("10_4jyny")
+
+[node name="BTShouldEnrage" type="Node" parent="BehaviorTree/EnragedChase"]
+script = ExtResource("18_0whn2")
+
+[node name="BTChaseEnraged" type="Node" parent="BehaviorTree/EnragedChase"]
+script = ExtResource("19_bx1xr")
+
 [node name="StartEvading" type="Node" parent="BehaviorTree"]
 script = ExtResource("10_4jyny")
+
+[node name="BTINotEnraged" type="Node" parent="BehaviorTree/StartEvading"]
+script = ExtResource("16_4jyny")
 
 [node name="BTIsInFlashlight" type="Node" parent="BehaviorTree/StartEvading"]
 script = ExtResource("14_8cim4")
@@ -100,14 +113,6 @@ script = ExtResource("16_iatxd")
 
 [node name="BTEvade" type="Node" parent="BehaviorTree/ContinueEvading"]
 script = ExtResource("17_qqxsh")
-
-[node name="EnragedChase" type="Node" parent="BehaviorTree"]
-
-[node name="BTShouldEnrage" type="Node" parent="BehaviorTree/EnragedChase"]
-script = ExtResource("18_0whn2")
-
-[node name="BTChaseEnraged" type="Node" parent="BehaviorTree/EnragedChase"]
-script = ExtResource("19_bx1xr")
 
 [node name="BTSneak" type="Node" parent="BehaviorTree"]
 script = ExtResource("20_n85mp")

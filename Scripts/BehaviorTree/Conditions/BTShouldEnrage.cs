@@ -4,13 +4,9 @@ public partial class BTShouldEnrage : BTNode
 {
 	public override BTState Tick(Node agent, Blackboard blackboard)
 	{
-		float angerLevel = blackboard.GetValue<float>("AngerLevel", 0.0f);
-		float maxAnger = blackboard.GetValue<float>("MaxAnger", 11.0f);
+		bool isEnraged = blackboard.GetValue<bool>("IsEnraged", false);
 		
-		// Probability based on anger level
-		float enrageChance = angerLevel / maxAnger;
-		bool shouldEnrage = GD.Randf() < enrageChance * 0.01f;
-		
-		return shouldEnrage ? BTState.Success : BTState.Failure;
+		// If enraged, always succeed to continue the enraged chase
+		return isEnraged ? BTState.Success : BTState.Failure;
 	}
 }

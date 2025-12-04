@@ -23,6 +23,7 @@ project/assembly_name="Fog Game"
 [global_group]
 
 light=""
+player=""
 
 [input]
 
