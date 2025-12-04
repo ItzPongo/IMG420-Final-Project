@@ -11,15 +11,21 @@ The DynamicFog2D node extends Godot's Node2D to render a simple, dynamic fog sys
 To have a visual fog effect rather than a flat white texture over the screen, a GDShader is applied to the child Sprite2D node used for displaying fog. The shader applies a user specified fog texture on top of the fog pixels and visually animates an endless scrolling effect. The shader also exposes properties for the fog scrolling direction and speed as well as visible opacity of the fog, meaning the fog can be fully opaque or just barely visible over the screen if desired.
 
 ## Features:
+*In case of gif attachment issues, gifs will be permanently stored [here](/Feature_Gifs).*
 ### Fog and light system
 Fog system with and without shader texture for demonstration - static green background also for demonstration.
-![Fog with texture](https://github.com/user-attachments/assets/93441090-bffe-4b6d-8111-9b199c4e5308) ![Fog without texture](https://github.com/user-attachments/assets/8d541add-c86a-4fbc-8a4e-e1f2886b6086)
+
+![Fog with texture](https://github.com/nah353/IMG420-Final-Project/blob/0de1cacba204560f4aaab0366b9d112884b6abed/Feature%20Gifs/Fog%20with%20texture.gif) ![Fog without texture](https://github.com/nah353/IMG420-Final-Project/blob/0de1cacba204560f4aaab0366b9d112884b6abed/Feature%20Gifs/Fog%20without%20texture.gif)
 
 ### Flashlight battery scaling
 As the battery level decreases, the flashlight's size also decreases. Battery pickups increase battery level and flashlight size. Sped up greatly for demonstration.
 
+![Flashlight scaling](https://github.com/nah353/IMG420-Final-Project/blob/0de1cacba204560f4aaab0366b9d112884b6abed/Feature%20Gifs/Flashlight%20scaling.gif)
 
 ### Endless map generation
+Camera zoomed out greatly and fog removed for demonstration. One map chunk is repeatedly generated ahead of the player as they move to create endless map effect.
+
+![Map generation](https://github.com/nah353/IMG420-Final-Project/blob/0de1cacba204560f4aaab0366b9d112884b6abed/Feature%20Gifs/Map%20generation.gif)
 
 ### Battery spawning and arrow indicators
 
