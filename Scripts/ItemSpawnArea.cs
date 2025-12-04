@@ -3,60 +3,59 @@ using Godot;
 public partial class ItemSpawnArea : Area2D
 {
 	[Export] public PackedScene ItemScene;        // The item scene to spawn
-	[Export] public float SpawnInterval = 1.5f;   // Seconds between spawns
-	[Export] public int MaxItems = 30;            // Optional: cap total items
-
-	private CircleShape2D _circleShape;
+	[Export] public NodePath PlayerPath;
+	
+	[Export] public float SpawnInterval = 20f;
+	[Export] public float SpawnDistance = 300f;
+	[Export] public int MaxItemsSpawned = 30;
+	
+	private Node2D _player;
+	private Node2D _currentItem;
 	private RandomNumberGenerator _rng = new();
 	private float _timer = 0f;
-	private int _spawnedCount = 0;
-
+	
+	public Node2D CurrentItem => _currentItem;
+	
 	public override void _Ready()
 	{
 		_rng.Randomize();
-
-		var collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
-		_circleShape = collisionShape.Shape as CircleShape2D;
-
-		if (_circleShape == null)
-		{
-			GD.PushError("ItemSpawnArea: CollisionShape2D must use CircleShape2D.");
-		}
+		_player = GetNode<CharacterBody2D>(PlayerPath);
 	}
-
+	
 	public override void _Process(double delta)
 	{
-		if (ItemScene == null || _circleShape == null)
+		if (_player == null || ItemScene == null)
+		{
 			return;
-
-		if (_spawnedCount >= MaxItems)
+		}
+		if (_currentItem != null && GodotObject.IsInstanceValid(_currentItem))
+		{
 			return;
-
+		}
+		
 		_timer += (float)delta;
-
+		
 		if (_timer >= SpawnInterval)
 		{
 			_timer = 0f;
-			SpawnItemInRadius();
+			SpawnItemAtDistance();
 		}
 	}
-
-	private void SpawnItemInRadius()
+	
+	private void SpawnItemAtDistance()
 	{
-		// Random point inside the circle defined by the Area2D's shape radius
-		float radius = _circleShape.Radius;
 		float angle = _rng.RandfRange(0, Mathf.Tau);
-		float distance = _rng.RandfRange(0, radius);
-
+		
 		Vector2 offset = new Vector2(
-			Mathf.Cos(angle) * distance,
-			Mathf.Sin(angle) * distance
+			Mathf.Cos(angle) * SpawnDistance,
+			Mathf.Sin(angle) * SpawnDistance
 		);
-
+		
 		Node2D item = ItemScene.Instantiate<Node2D>();
-		item.GlobalPosition = GlobalPosition + offset;
-
-		GetTree().CurrentScene.AddChild(item);
-		_spawnedCount++;
+		item.GlobalPosition = _player.GlobalPosition + offset;
+		
+		GetTree().CurrentScene.AddChild	(item);
+		
+		_currentItem = item;
 	}
 }
