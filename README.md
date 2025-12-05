@@ -49,4 +49,4 @@ Use WASD or arrow keys to move the player around and use your mouse to aim the f
 - Light sprites must have their position updated directly rather than as children of some other node such as the player to accurately affect the fog.
 
 ## Demo Video
-Video link here
+[Watch the demo on YouTube](https://youtu.be/B7XJEbcCctE)
